@@ -7,13 +7,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
+
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array<int, string>
      */
     protected $fillable = [
@@ -24,7 +24,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * The attributes that should be hidden for serialization.
-     *
      * @var array<int, string>
      */
     protected $hidden = [
@@ -34,7 +33,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * The attributes that should be cast.
-     *
      * @var array<string, string>
      */
     protected $casts = [
@@ -43,7 +41,6 @@ class User extends Authenticatable implements JWTSubject
 
      /**
      * Get the identifier that will be stored in the subject claim of the JWT.
-     *
      * @return mixed
      */
     public function getJWTIdentifier()
@@ -53,7 +50,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
-     *
      * @return array
      */
     public function getJWTCustomClaims()
@@ -63,7 +59,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function courses()
     {
-        return $this->belongsToMany(Courses::class, 'user_course', 'user_id', 'courses_id');
+        return $this->belongsToMany(Course::class, 'user_course', 'user_id', 'course_id');
     }
 }
 

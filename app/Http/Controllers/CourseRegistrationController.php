@@ -16,7 +16,13 @@ class CourseRegistrationController extends Controller
         ]);
 
         $user = auth()->user();
-        $user->courses()->sync($request->input('course_ids'));
+        $enrollmentData = [];
+        foreach ($request->input('course_ids') as $courseId) {
+            
+            $enrollmentData[$courseId] = ['enrollment_date' => now()];
+        }
+    
+        $user->courses()->sync($enrollmentData);
 
         return response()->json(['message' => 'Course(s) registered successfully'], 200);
     }

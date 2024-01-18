@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Jobs\CreateCoursesJob;
 use Illuminate\Http\Request;
+use App\Models\Course;
 
 class CoursesController extends Controller
 {
@@ -18,14 +19,14 @@ class CoursesController extends Controller
     public function listCoursesWithEnrollment(Request $request)
     {
         $user = auth()->user();
-    $courses = Courses::with(['users' => function ($query) use ($user) {
-        $query->where('users.id', $user->id);
-    }])->get();
+        $courses = Course::with(['users' => function ($query) use ($user) {
+            $query->where('users.id', $user->id);
+        }])->get();
 
-    return response()->json([
-        'message' => 'Courses listed successfully',
-        'courses' => $courses,
-    ], 200);
+        return response()->json([
+            'message' => 'Courses listed successfully',
+            'courses' => $courses,
+        ], 200);
     }
 
 }
