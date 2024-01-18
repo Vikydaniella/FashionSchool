@@ -5,49 +5,46 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Helpers\HttpStatus;;
 
 class AuthController extends Controller
 {
+    /** Authenticate a user by email and password.
+    * @param  Request  $request
+    *@return \Illuminate\Http\JsonResponse
+    */
 
-    public function __construct()
+    public function login(LoginRequest $request)
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
-    }
-
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
         $credentials = $request->only('email', 'password');
 
         $token = Auth::attempt($credentials);
         if (!$token) {
             return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized',
-            ], 401);
+                'status' => 'error'
+            ], HttpStatus::UNPROCESSABLE_ENTITY); 
         }
 
         $user = Auth::user();
         return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'authorisation' => [
+                'message' => 'User login Successfully',
+                'data' => [
+                    'user' => $user,
                     'token' => $token,
                     'type' => 'bearer',
-                ]
-            ]);
+                    'expiration_time' => now()->addSeconds(200)->format('Y-m-d H:i:s'),
+                ], HttpStatus::SUCCESS_CREATED]);
+
 
     }
 
-    public function register(Request $request){
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
+    /**Register a new user. 
+    * @param  AuthRequest  $request
+    *@return \Illuminate\Http\JsonResponse
+    */
+    public function register(RegisterRequest $request){
 
         $user = User::create([
             'name' => $request->name,
@@ -58,13 +55,10 @@ class AuthController extends Controller
         $token = Auth::login($user);
         return response()->json([
             'status' => 'success',
-            'message' => 'User created successfully',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
-        ]);
+            'message' => 'User Created Successfully',
+            'user' => [
+                'user' => $user,
+            ], HttpStatus::SUCCESS_CREATED]);
     }
 
     public function logout()
@@ -72,6 +66,7 @@ class AuthController extends Controller
         Auth::logout();
         return response()->json([
             'status' => 'success',
+            'status code' => '200',
             'message' => 'Successfully logged out',
         ]);
     }
@@ -80,6 +75,7 @@ class AuthController extends Controller
     {
         return response()->json([
             'status' => 'success',
+            'status code' => '200',
             'user' => Auth::user(),
             'authorisation' => [
                 'token' => Auth::refresh(),
