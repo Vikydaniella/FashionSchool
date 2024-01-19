@@ -4,19 +4,20 @@ namespace App\Http\Controllers;
 use App\Jobs\CreateCoursesJob;
 use Illuminate\Http\Request;
 use App\Models\Course;
+use App\Http\Requests\CoursesRequest;
 
 class CoursesController extends Controller
 {
 
-    public function createCourses()
+    public function create()
     {
         dispatch(new CreateCoursesJob());
         
         return response()->json(['message' => 'Courses created successfully', 200]);
 
     }
-
-    public function listCoursesWithEnrollment(Request $request)
+    
+    public function index(Request $request)
     {
         $user = auth()->user();
         $courses = Course::with(['users' => function ($query) use ($user) {

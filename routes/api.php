@@ -16,9 +16,10 @@ Route::controller(AuthController::class)->prefix('project')->group(function () {
 
 });
 
-Route::post('/project/courses/create', [CoursesController::class, 'createCourses']);
-
-Route::post('/project/enrol/courses', [CourseRegistrationController::class, 'registerCourses']);
-
-Route::get('/project/courses/list', [CoursesController::class, 'listCoursesWithEnrollment']);
+Route::prefix('project')->group(function () {
+    Route::post('/courses/create', [CoursesController::class, 'create']);
+    Route::get('/courses/list', [CoursesController::class, 'index']);
+    
+    Route::post('/enrol/courses', [CourseRegistrationController::class, 'registerCourses']);
+});
 

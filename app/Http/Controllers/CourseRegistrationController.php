@@ -5,25 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Course;
+use App\Http\Requests\CourseRegistrationRequest;
 
 
 class CourseRegistrationController extends Controller
 {
-    public function registerCourses(Request $request)
-    {
-        $request->validate([
-            'course_ids' => 'required|array|exists:courses,id',
-        ]);
+    public function registerCourses(CourseRegistrationRequest $request)
+{
+    $user = auth()->user();
+    $courseIds = $request->input('course_ids', []);
 
-        $user = auth()->user();
-        $enrollmentData = [];
-        foreach ($request->input('course_ids') as $courseId) {
-            
-            $enrollmentData[$courseId] = ['enrollment_date' => now()];
-        }
+    $user->courses()->sync($courseIds);
+
+    return response()->json(['message' => 'Course(s) registered successfully'], 200);
+}
     
-        $user->courses()->sync($enrollmentData);
-
-        return response()->json(['message' => 'Course(s) registered successfully'], 200);
-    }
 }

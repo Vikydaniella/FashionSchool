@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEnrollmentDateToUserCourseTable extends Migration
+class RemoveEnrollmentDateFromUserCourse extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddEnrollmentDateToUserCourseTable extends Migration
     public function up()
     {
         Schema::table('user_course', function (Blueprint $table) {
-            $table->timestamp('enrollment_date');
+            $table->dropColumn('enrollment_date');
         });
     }
 
