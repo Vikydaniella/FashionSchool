@@ -5,6 +5,8 @@ use App\Jobs\CreateCoursesJob;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Http\Requests\CoursesRequest;
+use App\Exports\CoursesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CoursesController extends Controller
 {
@@ -30,4 +32,9 @@ class CoursesController extends Controller
         ], 200);
     }
 
+    public function export()
+    {
+        //return Excel::download(new CoursesExport, 'courses.xlsx');
+        return Excel::download(new CoursesExport, 'courses.csv');
+    }
 }

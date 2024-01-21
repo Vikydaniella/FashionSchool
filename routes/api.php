@@ -4,22 +4,22 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CoursesController;
-use App\Http\Controllers\CourseRegistrationController;
-
-
-
-Route::controller(AuthController::class)->prefix('project')->group(function () {
-    Route::post('login', 'login');
-    Route::post('register', 'register');
-    Route::post('logout', 'logout')->middleware('auth');
-    Route::post('refresh', 'refresh')->middleware('auth');
-
-});
+use App\Http\Controllers\UserController;
 
 Route::prefix('project')->group(function () {
-    Route::post('/courses/create', [CoursesController::class, 'create']);
-    Route::get('/courses/list', [CoursesController::class, 'index']);
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
     
-    Route::post('/enrol/courses', [CourseRegistrationController::class, 'registerCourses']);
-});
+    Route::middleware('auth')->group(function () {
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::post('refresh', [AuthController::class, 'refresh']);
 
+        Route::prefix('courses')->group(function () {
+            Route::post('create', [CoursesController::class, 'create']);
+            Route::get('list', [CoursesController::class, 'index']);
+            Route::get('export', [CoursesController::class, 'export']);
+        });
+
+        Route::post('enrol/courses', [UserController::class, 'registerCourses']);
+    });
+});
