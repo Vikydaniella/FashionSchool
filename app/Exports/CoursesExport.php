@@ -24,7 +24,7 @@ class CoursesExport implements FromCollection, WithHeadings
             'Category',
             'Course_code',
             'created_at',
-            'update_at'
+            'updated_at'
         ];
     }
 }

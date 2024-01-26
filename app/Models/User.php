@@ -57,6 +57,10 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    /**
+     * Get the courses associated with the user.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function courses()
     {
         return $this->belongsToMany(Course::class, 'user_course', 'user_id', 'course_id')->withTimestamps();

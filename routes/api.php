@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CoursesController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserCoursesController;
 
 Route::prefix('project')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -15,11 +15,12 @@ Route::prefix('project')->group(function () {
         Route::post('refresh', [AuthController::class, 'refresh']);
 
         Route::prefix('courses')->group(function () {
-            Route::post('create', [CoursesController::class, 'create']);
-            Route::get('list', [CoursesController::class, 'index']);
             Route::get('export', [CoursesController::class, 'export']);
+            Route::get('list', [UserCoursesController::class, 'index']);
+            Route::post('create', [CoursesController::class, 'create']);
         });
 
-        Route::post('enrol/courses', [UserController::class, 'registerCourses']);
+        Route::post('enrol/courses', [UserCoursesController::class, 'registerCourses']);
+        
     });
 });

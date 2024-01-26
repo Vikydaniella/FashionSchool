@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Helpers\HttpStatus;;
+use App\Helpers\HttpStatus;
 
 class AuthController extends Controller
 {
